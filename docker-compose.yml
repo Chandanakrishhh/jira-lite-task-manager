@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: postgres-taskmanager
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: Chandana
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - taskmanager-db:/data/postgres
+    ports:
+      - "5333:5432"
+    networks:
+      - taskmanager-network
+    restart: unless-stopped
+
+networks:
+  taskmanager-network:
+    driver: bridge
+
+volumes:
+  taskmanager-db:
