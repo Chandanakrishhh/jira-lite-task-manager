@@ -2,6 +2,7 @@ package com.example.taskmanager.controller;
 
 import com.example.taskmanager.model.Project;
 import com.example.taskmanager.service.ProjectService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +30,11 @@ public class ProjectController {
     @PostMapping
     public Project createProject(@RequestBody Project project) {
         return projectService.createProject(project);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
     }
 }

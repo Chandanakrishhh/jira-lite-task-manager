@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         User user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
-        String token = jwtService.generateToken(user.getUsername());
+        String token = jwtService.generateToken(user.getUsername(), user.getRole().name());
         return new LoginResponse(token);
     }
 }
