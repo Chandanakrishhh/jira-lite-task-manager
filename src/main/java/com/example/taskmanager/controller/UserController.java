@@ -1,7 +1,9 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.dto.UserResponseDto;
 import com.example.taskmanager.model.User;
 import com.example.taskmanager.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,18 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserResponseDto createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 }

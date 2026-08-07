@@ -1,11 +1,14 @@
 package com.example.taskmanager.service;
 
+import com.example.taskmanager.dto.UserResponseDto;
+import com.example.taskmanager.exception.ResourceNotFoundException;
 import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -18,18 +21,23 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("User with id " + id + " not found"));
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+        return toDto(user);
     }
 
-    public User createUser(User user) {
+    public UserResponseDto createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        return toDto(saved);
     }
 
     public User login(String username, String rawPassword) {
@@ -41,5 +49,9 @@ public class UserService {
         }
 
         return user;
+    }
+
+    private UserResponseDto toDto(User user) {
+        return new UserResponseDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
     }
 }

@@ -1,7 +1,9 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.dto.TaskResponseDto;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.service.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,18 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
+    public List<TaskResponseDto> getAllTasks() {
         return taskService.getAllTasks();
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public TaskResponseDto getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskResponseDto createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
 }

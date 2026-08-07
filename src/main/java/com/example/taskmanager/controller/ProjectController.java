@@ -1,7 +1,9 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.dto.ProjectResponseDto;
 import com.example.taskmanager.model.Project;
 import com.example.taskmanager.service.ProjectService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,17 +20,18 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<Project> getAllProjects() {
+    public List<ProjectResponseDto> getAllProjects() {
         return projectService.getAllProjects();
     }
 
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Long id) {
+    public ProjectResponseDto getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id);
     }
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProjectResponseDto createProject(@RequestBody Project project) {
         return projectService.createProject(project);
     }
 
